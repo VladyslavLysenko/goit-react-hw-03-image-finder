@@ -1,10 +1,11 @@
 import { Component } from 'react';
 import { SearchBar } from './SearchBar/SearchBar';
 import { Toaster } from 'react-hot-toast';
+import {ImageGallery} from './ImageGallery/ImageGallery'
 
 export class App extends Component {
   state = {
-    photoName: null,
+    photoName: '',
   };
 
   // handleFormSubmit = pokemonName => {
@@ -29,6 +30,7 @@ export class App extends Component {
       <div style={{ maxWidth: 1170, margin: '0 auto', padding: 20 }}>
         <Toaster/>
         <SearchBar onSubmit={this.handleFormSubmit} />
+        <ImageGallery photoName={ this.state.photoName} />
       </div>
     );
   }

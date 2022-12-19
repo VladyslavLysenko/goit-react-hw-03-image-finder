@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import toast from 'react-hot-toast';
-// Реакт тост 29 хв
+
 export class SearchBar extends Component {
   state = {
     photoName: '',
@@ -18,7 +18,7 @@ export class SearchBar extends Component {
       return;
     }
     this.props.onSubmit(this.state.photoName);
-    this.setState({ photoName: '' });
+      this.setState({ photoName: ''});
   };
 
   render() {

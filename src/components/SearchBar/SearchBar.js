@@ -18,7 +18,7 @@ export class SearchBar extends Component {
       return;
     }
     this.props.onSubmit(this.state.photoName);
-      this.setState({ photoName: ''});
+      this.setState({photoName: ''});
   };
 
   render() {
@@ -31,6 +31,7 @@ export class SearchBar extends Component {
 
           <input
             onChange={this.handleNameChange}
+            value={this.state.photoName}
             className="input"
             type="text"
             autoComplete="off"

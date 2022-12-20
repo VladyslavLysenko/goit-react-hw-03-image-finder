@@ -1,5 +1,7 @@
 import { Component } from 'react';
+import { ImageGalleryItem } from './ImageGalleryItem';
 // idle - простой,pending-ожидаєтся,resolve-выполнилось, reject-отклонено
+// компонент еррор
 export class ImageGallery extends Component {
   state = {
     photos: [],
@@ -61,9 +63,7 @@ export class ImageGallery extends Component {
       return (
         <ul className="gallery">
           {this.state.photos.map(photo => (
-            <li key={photo.id} className="gallery-item">
-              <img src={photo.webformatURL} alt={photo.tags} />
-            </li>
+            <ImageGalleryItem photo={photo} />
           ))}
         </ul>
       );

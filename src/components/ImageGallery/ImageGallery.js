@@ -2,51 +2,68 @@ import { Component } from 'react';
 // idle - простой,pending-ожидаєтся,resolve-выполнилось, reject-отклонено
 export class ImageGallery extends Component {
   state = {
-    photo: [],
-    status: 'Idle',
+    photos: [],
+    status: 'idle',
+    error: null,
   };
 
   componentDidUpdate(prevProps, prevState) {
     const prevName = prevProps.photoName;
     const nextName = this.props.photoName;
     if (prevName !== nextName) {
+      this.setState({ status: 'pending' });
       console.log('Змінився пошуковий запит');
+      console.log(nextName);
       fetch(
         `https://pixabay.com/api/?q=${nextName}&page=1&key=30662426-21982097d0559eebc608a0eec&image_type=photo&orientation=horizontal&per_page=12`
       )
-        .then(res => res.json())
-        .then(console.log);
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          }
+        })
+        .then(photos => this.setState({ photos: [...prevState.photos, ...photos.hits], status:'resolved' }))
+        // .then(console.log)
+        .catch(error => this.setState({ error, status: 'rejected' }));
+      //  .catch(error => this.setState({ error, status: Status.REJECTED }));
     }
   }
 
   render() {
-    if (this.state.status === 'idle') {
+    const { status } = this.state;
+    if (status === 'idle') {
       return (
         <div>
           <p>Знайди свої фото</p>
         </div>
       );
     }
-    if (this.state.status === 'pending') {
+    if (status === 'pending') {
       return (
         <div>
           <p>Шукаємо...</p>
         </div>
       );
     }
-    if (this.state.status === 'rejected') {
+    if (status === 'rejected') {
       return (
         <div>
           <p>Зображення не знайдено...</p>
         </div>
       );
     }
-    if (this.state.status === 'resolved') {
+    if (status === 'resolved') {
       return (
         <ul className="gallery">
-          <li className="gallery-item">
-            <img src="{this.}" alt="" />
-          </li>
+          {this.state.photos.map(photo => (
+            
+            <li key={photo.id} className="gallery-item">
+              <img
+                src={photo.webformatURL}
+                alt={photo.tags}
+              />
+            </li>
+          ))}
         </ul>
       );
     }

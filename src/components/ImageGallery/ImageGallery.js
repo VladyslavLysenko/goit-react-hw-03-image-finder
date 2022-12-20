@@ -29,11 +29,12 @@ export class ImageGallery extends Component {
             photos: [...prevState.photos, ...photos.hits],
             status: 'resolved',
           })
-        )
+      )
         // .then(console.log)
         .catch(error => this.setState({ error, status: 'rejected' }));
       //  .catch(error => this.setState({ error, status: Status.REJECTED }));
     }
+
   }
 
   render() {

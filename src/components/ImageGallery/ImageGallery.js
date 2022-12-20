@@ -22,7 +22,12 @@ export class ImageGallery extends Component {
             return response.json();
           }
         })
-        .then(photos => this.setState({ photos: [...prevState.photos, ...photos.hits], status:'resolved' }))
+        .then(photos =>
+          this.setState({
+            photos: [...prevState.photos, ...photos.hits],
+            status: 'resolved',
+          })
+        )
         // .then(console.log)
         .catch(error => this.setState({ error, status: 'rejected' }));
       //  .catch(error => this.setState({ error, status: Status.REJECTED }));
@@ -56,12 +61,8 @@ export class ImageGallery extends Component {
       return (
         <ul className="gallery">
           {this.state.photos.map(photo => (
-            
             <li key={photo.id} className="gallery-item">
-              <img
-                src={photo.webformatURL}
-                alt={photo.tags}
-              />
+              <img src={photo.webformatURL} alt={photo.tags} />
             </li>
           ))}
         </ul>

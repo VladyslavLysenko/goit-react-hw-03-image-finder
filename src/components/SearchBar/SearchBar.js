@@ -13,12 +13,12 @@ export class SearchBar extends Component {
   handleSubmit = event => {
     event.preventDefault();
 
-      if (this.state.photoName.trim() === '') {
-        toast('Уведіть назву для пошуку фото...');
+    if (this.state.photoName.trim() === '') {
+      toast('Уведіть назву для пошуку фото...');
       return;
     }
     this.props.onSubmit(this.state.photoName);
-      this.setState({photoName: ''});
+    this.setState({ photoName: '' });
   };
 
   render() {

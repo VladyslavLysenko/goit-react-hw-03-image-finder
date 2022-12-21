@@ -1,19 +1,29 @@
 import { Component } from 'react';
 import { ImageGalleryItem } from './ImageGalleryItem';
+import toast from 'react-hot-toast';
 // idle - простой,pending-ожидаєтся,resolve-выполнилось, reject-отклонено
 // компонент еррор
+
+const Status = {
+  IDLE: 'idle',
+  PENDING: 'pending',
+  RESOLVED: 'resolved',
+  REJECTED: 'rejected',
+};
+
 export class ImageGallery extends Component {
   state = {
     photos: [],
-    status: 'idle',
+    status: Status.IDLE,
     error: null,
   };
 
   componentDidUpdate(prevProps, prevState) {
     const prevName = prevProps.photoName;
     const nextName = this.props.photoName;
+    // const { page } = this.props;
     if (prevName !== nextName) {
-      this.setState({ status: 'pending' });
+      this.setState({ status: Status.PENDING });
       console.log('Змінився пошуковий запит');
       console.log(nextName);
       fetch(
@@ -24,21 +34,32 @@ export class ImageGallery extends Component {
             return response.json();
           }
         })
-        .then(photos =>
-          this.setState({
-            photos: [...prevState.photos, ...photos.hits],
-            status: 'resolved',
-          })
-      )
+        .then(photos => {
+          if (photos.hits.length === 0) {
+            toast.error('Sorry,we did not find...');
+          } else {
+            this.setState({
+              photos: [...prevState.photos, ...photos.hits],
+              status: Status.RESOLVED,
+            })
+              .catch(() => {
+              this.setState({ status: Status.REJECTED });
+              toast.error('Ups... Something is wrong.', {
+                duration: 4000,
+                position: 'top-center',
+              });
+            });
+          }
+        })
         // .then(console.log)
-        .catch(error => this.setState({ error, status: 'rejected' }));
+        .catch(error => this.setState({ error, status: Status.REJECTED }));
       //  .catch(error => this.setState({ error, status: Status.REJECTED }));
     }
-
   }
 
   render() {
     const { status } = this.state;
+    // const { photoName } = this.props;
     if (status === 'idle') {
       return (
         <div>

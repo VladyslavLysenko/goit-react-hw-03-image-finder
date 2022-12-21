@@ -2,6 +2,8 @@ import { Component } from 'react';
 import { ImageGalleryItem } from './ImageGalleryItem';
 import { Loader } from '../Loader/Loader';
 import toast from 'react-hot-toast';
+// import { nanoid } from 'nanoid';
+import { Button } from '../Button/Button';
 // idle - простой,pending-ожидаєтся,resolve-выполнилось, reject-отклонено
 // компонент еррор
 
@@ -17,20 +19,30 @@ export class ImageGallery extends Component {
     photos: [],
     status: Status.IDLE,
     error: null,
+    page: 1,
+    showLoadMore: false,
+    perPage: 12,
+  };
+  loadMore = () => {
+    this.setState(prev => ({
+      page: (prev.page += 1),
+    }));
+    console.log(this.state.page);
   };
 
   componentDidUpdate(prevProps, prevState) {
     const prevName = prevProps.photoName;
     const nextName = this.props.photoName;
-    const prevPage = prevProps.page;
-    const nextPage = this.props.page
+    const prevPage = prevState.page;
+    const nextPage = this.state.page;
+
     if (prevName !== nextName || prevPage !== nextPage) {
       this.setState({ status: Status.PENDING });
 
-      console.log('Змінився пошуковий запит');
-      console.log(nextName);
+      // console.log('Змінився пошуковий запит');
+      // console.log(nextName);
       fetch(
-        `https://pixabay.com/api/?q=${nextName}&page=1&key=30662426-21982097d0559eebc608a0eec&image_type=photo&orientation=horizontal&per_page=12`
+        `https://pixabay.com/api/?q=${nextName}&page=${nextPage}&key=30662426-21982097d0559eebc608a0eec&image_type=photo&orientation=horizontal&per_page=${this.state.perPage}`
       )
         .then(response => {
           if (response.ok) {
@@ -38,6 +50,12 @@ export class ImageGallery extends Component {
           }
         })
         .then(photos => {
+          console.log(photos.totalHits);
+          const { perPage, page } = this.state;
+          const pages = Math.ceil(photos.totalHits / perPage);
+          const showLoadMore = page < pages;
+          this.setState({ showLoadMore });
+
           if (photos.hits.length === 0) {
             toast.error('Sorry,we did not find...');
             this.setState({ status: Status.IDLE });
@@ -58,10 +76,13 @@ export class ImageGallery extends Component {
       // .then(console.log)
       //  .catch(error => this.setState({ error, status: Status.REJECTED }));
     }
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
   }
 
   render() {
-    const { status } = this.state;
+    const { status, showLoadMore } = this.state;
+
+    console.log('showLoadMore', showLoadMore);
     // const { photoName } = this.props;
     if (status === 'idle') {
       return (
@@ -71,9 +92,7 @@ export class ImageGallery extends Component {
       );
     }
     if (status === 'pending') {
-      return (
-        <Loader/>
-      );
+      return <Loader />;
     }
     if (status === 'rejected') {
       return (
@@ -84,11 +103,14 @@ export class ImageGallery extends Component {
     }
     if (status === 'resolved') {
       return (
-        <ul className="gallery">
-          {this.state.photos.map(photo => (
-            <ImageGalleryItem photo={photo} key={photo.id} />
-          ))}
-        </ul>
+        <div>
+          <ul className="gallery">
+            {this.state.photos.map(photo => (
+              <ImageGalleryItem photo={photo} key={photo.id} />
+            ))}
+          </ul>
+          {showLoadMore && <Button onClick={this.loadMore} />}
+        </div>
       );
     }
   }

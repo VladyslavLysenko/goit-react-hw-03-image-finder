@@ -3,35 +3,31 @@ import { SearchBar } from './SearchBar/SearchBar';
 import { Toaster } from 'react-hot-toast';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 
+
+
 export class App extends Component {
   state = {
     photoName: '',
-    page: 1,
   };
 
   // handleFormSubmit = pokemonName => {
   //   this.setState({ pokemonName });
   // };
 
-  componentDidMount() {
-    fetch(
-      `https://pixabay.com/api/?q=cat&page=1&key=30662426-21982097d0559eebc608a0eec&image_type=photo&orientation=horizontal&per_page=12`
-    )
-      .then(res => res.json())
-      .then(photo => this.setState({ photo }));
-  }
+  // componentDidMount() {
+  //   fetch(
+  //     `https://pixabay.com/api/?q=cat&page=1&key=30662426-21982097d0559eebc608a0eec&image_type=photo&orientation=horizontal&per_page=12`
+  //   )
+  //     .then(res => res.json())
+  //     .then(photo => this.setState({ photo }));
+  // }
 
   handleFormSubmit = photoName => {
     this.setState({ photoName });
     console.log(photoName);
   };
 
-  loadMore = () => {
-    this.setState(prev => ({
-      page: (prev.page += 1),
-    }));
-    console.log(this.state.page);
-  };
+
 
   render() {
     const { photoName, page } = this.state;
@@ -40,7 +36,7 @@ export class App extends Component {
         <Toaster />
         <SearchBar onSubmit={this.handleFormSubmit} />
         <ImageGallery photoName={photoName} page={page} />
-        <button onClick={this.loadMore}>Load more</button>
+
       </div>
     );
   }

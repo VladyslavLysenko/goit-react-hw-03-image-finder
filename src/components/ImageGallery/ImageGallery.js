@@ -52,7 +52,6 @@ export class ImageGallery extends Component {
           }
         })
         // .then(console.log)
-        .catch(error => this.setState({ error, status: Status.REJECTED }));
       //  .catch(error => this.setState({ error, status: Status.REJECTED }));
     }
   }

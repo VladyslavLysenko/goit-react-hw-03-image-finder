@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import { ImageGalleryItem } from './ImageGalleryItem';
+import { Loader } from '../Loader/Loader';
 import toast from 'react-hot-toast';
 // idle - простой,pending-ожидаєтся,resolve-выполнилось, reject-отклонено
 // компонент еррор
@@ -21,9 +22,11 @@ export class ImageGallery extends Component {
   componentDidUpdate(prevProps, prevState) {
     const prevName = prevProps.photoName;
     const nextName = this.props.photoName;
-    // const { page } = this.props;
-    if (prevName !== nextName) {
+    const prevPage = prevProps.page;
+    const nextPage = this.props.page
+    if (prevName !== nextName || prevPage !== nextPage) {
       this.setState({ status: Status.PENDING });
+
       console.log('Змінився пошуковий запит');
       console.log(nextName);
       fetch(
@@ -37,21 +40,22 @@ export class ImageGallery extends Component {
         .then(photos => {
           if (photos.hits.length === 0) {
             toast.error('Sorry,we did not find...');
+            this.setState({ status: Status.IDLE });
           } else {
             this.setState({
               photos: [...prevState.photos, ...photos.hits],
               status: Status.RESOLVED,
-            })
-              .catch(() => {
-              this.setState({ status: Status.REJECTED });
-              toast.error('Ups... Something is wrong.', {
-                duration: 4000,
-                position: 'top-center',
-              });
             });
           }
         })
-        // .then(console.log)
+        .catch(() => {
+          this.setState({ status: Status.REJECTED });
+          toast.error('Ups... Something is wrong.', {
+            duration: 4000,
+            position: 'top-center',
+          });
+        });
+      // .then(console.log)
       //  .catch(error => this.setState({ error, status: Status.REJECTED }));
     }
   }
@@ -68,9 +72,7 @@ export class ImageGallery extends Component {
     }
     if (status === 'pending') {
       return (
-        <div>
-          <p>Шукаємо...</p>
-        </div>
+        <Loader/>
       );
     }
     if (status === 'rejected') {
@@ -84,7 +86,7 @@ export class ImageGallery extends Component {
       return (
         <ul className="gallery">
           {this.state.photos.map(photo => (
-            <ImageGalleryItem photo={photo} />
+            <ImageGalleryItem photo={photo} key={photo.id} />
           ))}
         </ul>
       );

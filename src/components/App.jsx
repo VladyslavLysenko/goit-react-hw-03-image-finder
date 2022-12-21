@@ -26,12 +26,21 @@ export class App extends Component {
     console.log(photoName);
   };
 
+  loadMore = () => {
+    this.setState(prev => ({
+      page: (prev.page += 1),
+    }));
+    console.log(this.state.page);
+  };
+
   render() {
+    const { photoName, page } = this.state;
     return (
       <div style={{ maxWidth: 1170, margin: '0 auto', padding: 20 }}>
         <Toaster />
         <SearchBar onSubmit={this.handleFormSubmit} />
-        <ImageGallery photoName={this.state.photoName} page={this.state.page} />
+        <ImageGallery photoName={photoName} page={page} />
+        <button onClick={this.loadMore}>Load more</button>
       </div>
     );
   }

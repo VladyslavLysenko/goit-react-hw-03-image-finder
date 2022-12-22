@@ -2,41 +2,45 @@ import { Component } from 'react';
 import { SearchBar } from './SearchBar/SearchBar';
 import { Toaster } from 'react-hot-toast';
 import { ImageGallery } from './ImageGallery/ImageGallery';
-
-
+import { Modal } from './Modal/Modal';
 
 export class App extends Component {
   state = {
     photoName: '',
+    showModal: false,
+    largeImgData: { src: '', alt: '' },
   };
-
-  // handleFormSubmit = pokemonName => {
-  //   this.setState({ pokemonName });
-  // };
-
-  // componentDidMount() {
-  //   fetch(
-  //     `https://pixabay.com/api/?q=cat&page=1&key=30662426-21982097d0559eebc608a0eec&image_type=photo&orientation=horizontal&per_page=12`
-  //   )
-  //     .then(res => res.json())
-  //     .then(photo => this.setState({ photo }));
-  // }
 
   handleFormSubmit = photoName => {
     this.setState({ photoName });
     console.log(photoName);
   };
 
+  toggleModal = () => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+    }));
+  };
 
+  shereSrcForModal = (srcLarge, altLarge) => {
+    this.setState({ largeImgData: { src: srcLarge, alt: altLarge } });
+  };
 
   render() {
-    const { photoName, page } = this.state;
+    const { photoName, page, showModal, largeImgData } = this.state;
     return (
       <div style={{ maxWidth: 1170, margin: '0 auto', padding: 20 }}>
+        {showModal && (
+          <Modal alt={largeImgData.alt} onClose={this.toggleModal} />
+        )}
         <Toaster />
         <SearchBar onSubmit={this.handleFormSubmit} />
-        <ImageGallery photoName={photoName} page={page} />
-
+        <ImageGallery
+          photoName={photoName}
+          page={page}
+          onImgClick={this.toggleModal}
+          shereSrcForModal={this.shereSrcForModal}
+        />
       </div>
     );
   }

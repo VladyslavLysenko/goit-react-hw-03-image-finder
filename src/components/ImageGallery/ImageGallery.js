@@ -1,12 +1,9 @@
 import { Component } from 'react';
 import { ImageGalleryItem } from './ImageGalleryItem';
 import { Loader } from '../Loader/Loader';
-import toast from 'react-hot-toast';
-// import { nanoid } from 'nanoid';
 import { Button } from '../Button/Button';
+import toast from 'react-hot-toast';
 // idle - простой,pending-ожидаєтся,resolve-выполнилось, reject-отклонено
-// компонент еррор
-
 const Status = {
   IDLE: 'idle',
   PENDING: 'pending',
@@ -23,12 +20,6 @@ export class ImageGallery extends Component {
     showLoadMore: false,
     perPage: 12,
   };
-  loadMore = () => {
-    this.setState(prev => ({
-      page: (prev.page += 1),
-    }));
-    console.log(this.state.page);
-  };
 
   componentDidUpdate(prevProps, prevState) {
     const prevName = prevProps.photoName;
@@ -38,9 +29,8 @@ export class ImageGallery extends Component {
 
     if (prevName !== nextName || prevPage !== nextPage) {
       this.setState({ status: Status.PENDING });
+      this.setState({photos:[]})
 
-      // console.log('Змінився пошуковий запит');
-      // console.log(nextName);
       fetch(
         `https://pixabay.com/api/?q=${nextName}&page=${nextPage}&key=30662426-21982097d0559eebc608a0eec&image_type=photo&orientation=horizontal&per_page=${this.state.perPage}`
       )
@@ -73,17 +63,19 @@ export class ImageGallery extends Component {
             position: 'top-center',
           });
         });
-      // .then(console.log)
-      //  .catch(error => this.setState({ error, status: Status.REJECTED }));
     }
     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
   }
-
+  loadMore = () => {
+    this.setState(prev => ({
+      page: (prev.page += 1),
+    }));
+    console.log(this.state.page);
+  };
   render() {
     const { status, showLoadMore } = this.state;
+    const { onImgClick, shereSrcForModal } = this.props;
 
-    console.log('showLoadMore', showLoadMore);
-    // const { photoName } = this.props;
     if (status === 'idle') {
       return (
         <div>
@@ -106,10 +98,15 @@ export class ImageGallery extends Component {
         <div>
           <ul className="gallery">
             {this.state.photos.map(photo => (
-              <ImageGalleryItem photo={photo} key={photo.id} />
+              <ImageGalleryItem
+                photo={photo}
+                key={photo.id}
+                onImgClick={onImgClick}
+                shereSrcForModal={shereSrcForModal}
+              />
             ))}
           </ul>
-          {showLoadMore && <Button onClick={this.loadMore} />}
+          {showLoadMore && <Button type="button" onClick={this.loadMore} />}
         </div>
       );
     }

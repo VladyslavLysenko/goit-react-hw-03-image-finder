@@ -26,11 +26,13 @@ export class ImageGallery extends Component {
     const nextName = this.props.photoName;
     const prevPage = prevState.page;
     const nextPage = this.state.page;
+    let resultPhotos = [];
 
     if (prevName !== nextName || prevPage !== nextPage) {
       this.setState({ status: Status.PENDING });
-      this.setState({photos:[]})
-
+      if (prevName === nextName) {
+        resultPhotos = prevState.photos;
+      }
       fetch(
         `https://pixabay.com/api/?q=${nextName}&page=${nextPage}&key=30662426-21982097d0559eebc608a0eec&image_type=photo&orientation=horizontal&per_page=${this.state.perPage}`
       )
@@ -51,7 +53,7 @@ export class ImageGallery extends Component {
             this.setState({ status: Status.IDLE });
           } else {
             this.setState({
-              photos: [...prevState.photos, ...photos.hits],
+              photos: [...resultPhotos, ...photos.hits],
               status: Status.RESOLVED,
             });
           }

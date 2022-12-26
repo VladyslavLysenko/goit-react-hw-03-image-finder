@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { Overlay, ModalDiv } from './Modal.styled';
 
 
@@ -21,6 +21,7 @@ export class Modal extends Component {
 
   render() {
     const { src, alt, onClose } = this.props;
+    console.log(src);
     return (
       <Overlay
         onClick={() => {
@@ -36,8 +37,8 @@ export class Modal extends Component {
   }
 }
 
-// Modal.propTypes = {
-//   onClose: PropTypes.func.isRequired,
-//   src: PropTypes.string.isRequired,
-//   alt: PropTypes.string.isRequired,
-// };
+Modal.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  src: PropTypes.string.isRequired,
+  alt: PropTypes.string.isRequired,
+};

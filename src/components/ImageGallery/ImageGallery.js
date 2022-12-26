@@ -1,5 +1,6 @@
 import { ImageGalleryItem } from './ImageGalleryItem';
 import { Loader } from '../Loader/Loader';
+import { ImageGalleryUl } from './ImageGallery.styled';
 import PropTypes from 'prop-types';
 
 // idle - простой,pending-ожидаєтся,resolve-выполнилось, reject-отклонено
@@ -31,7 +32,7 @@ export default function ImageGallery({
   if (status === 'resolved') {
     return (
       <div>
-        <ul className="gallery">
+        <ImageGalleryUl className="gallery">
           {photos.map(photo => (
             <ImageGalleryItem
               photo={photo}
@@ -40,7 +41,7 @@ export default function ImageGallery({
               shereSrcForModal={shereSrcForModal}
             />
           ))}
-        </ul>
+        </ImageGalleryUl>
       </div>
     );
   }

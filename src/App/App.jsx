@@ -1,10 +1,14 @@
 import { Component } from 'react';
-import { SearchBar } from './SearchBar/SearchBar';
+import { SearchBar } from '../components/SearchBar/SearchBar';
 import { Toaster } from 'react-hot-toast';
-import ImageGallery from './ImageGallery/ImageGallery';
-import { Modal } from './Modal/Modal';
-import { Button } from './Button/Button';
+import ImageGallery from '../components/ImageGallery/ImageGallery';
+import { Modal } from '../components/Modal/Modal';
+import { Button } from '../components/Button/Button';
+import { AppDiv } from './App.styled';
+import { GlobalStyle } from 'GlobalStyle';
+
 import toast from 'react-hot-toast';
+
 const Status = {
   IDLE: 'idle',
   PENDING: 'pending',
@@ -39,7 +43,6 @@ export class App extends Component {
         const pages = Math.ceil(photos.totalHits / perPage);
         const showLoadMore = page < pages;
         this.setState({ showLoadMore });
-     
 
         if (photos.hits.length === 0) {
           toast.error('Sorry,we did not find...');
@@ -50,7 +53,7 @@ export class App extends Component {
             status: Status.RESOLVED,
             page: nextPage,
           }));
-             this.autoScroll();
+          this.autoScroll();
         }
       })
 
@@ -93,7 +96,8 @@ export class App extends Component {
     const { showModal, largeImgData, showLoadMore, photos, status } =
       this.state;
     return (
-      <div style={{ maxWidth: 1170, margin: '0 auto', padding: 20 }}>
+      <AppDiv>
+        <GlobalStyle />
         {showModal && (
           <Modal
             src={largeImgData.src}
@@ -110,7 +114,7 @@ export class App extends Component {
           shereSrcForModal={this.shereSrcForModal}
         />
         {showLoadMore && <Button type="button" onClick={this.loadMore} />}
-      </div>
+      </AppDiv>
     );
   }
 }

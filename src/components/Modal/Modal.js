@@ -3,6 +3,11 @@ import PropTypes from 'prop-types';
 import { Overlay, ModalDiv } from './Modal.styled';
 
 export class Modal extends Component {
+  static propTypes = {
+    onClose: PropTypes.func.isRequired,
+    src: PropTypes.string.isRequired,
+    alt: PropTypes.string.isRequired,
+  };
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown);
   }
@@ -32,8 +37,3 @@ export class Modal extends Component {
   }
 }
 
-Modal.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  src: PropTypes.string.isRequired,
-  alt: PropTypes.string.isRequired,
-};

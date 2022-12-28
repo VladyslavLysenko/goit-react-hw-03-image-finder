@@ -95,7 +95,7 @@ export class App extends Component {
   };
 
   handleFormSubmit = photoName => {
-    this.setState({ photoName, photos: [], page:1, }, );
+    this.setState({ photoName, photos: [], page: 1 });
   };
 
   toggleModal = () => {

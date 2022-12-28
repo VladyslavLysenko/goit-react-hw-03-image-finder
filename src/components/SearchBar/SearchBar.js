@@ -14,6 +14,8 @@ export class SearchBar extends Component {
     photoName: '',
   };
 
+  static propTypes = { onSubmit: PropTypes.func.isRequired };
+
   handleNameChange = event => {
     this.setState({ photoName: event.currentTarget.value.toLowerCase() });
   };
@@ -51,6 +53,3 @@ export class SearchBar extends Component {
   }
 }
 
-SearchBar.propTypes = {
-  onSubmit: PropTypes.func,
-};

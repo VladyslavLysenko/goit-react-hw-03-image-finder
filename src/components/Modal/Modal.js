@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Overlay, ModalDiv } from './Modal.styled';
 
-
 export class Modal extends Component {
-  state = {};
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown);
   }
@@ -16,21 +14,18 @@ export class Modal extends Component {
     if (evt.code === 'Escape') {
       this.props.onClose();
     }
-    };
-
+  };
 
   render() {
     const { src, alt, onClose } = this.props;
-    console.log(src);
     return (
       <Overlay
         onClick={() => {
-                onClose();
-                ;
+          onClose();
         }}
       >
-            <ModalDiv>
-                <img src={src} alt={alt}  />
+        <ModalDiv>
+          <img src={src} alt={alt} />
         </ModalDiv>
       </Overlay>
     );

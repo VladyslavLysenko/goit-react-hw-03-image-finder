@@ -19,7 +19,7 @@ export default function ImageGallery({
     );
   }
   if (status === 'pending') {
-    return <Loader />;
+    return <Loader/>;
   }
   if (status === 'rejected') {
     return (

@@ -6,6 +6,7 @@ import { Modal } from '../components/Modal/Modal';
 import { Button } from '../components/Button/Button';
 import { AppDiv } from './App.styled';
 import { GlobalStyle } from 'GlobalStyle';
+import api from 'components/Fetch/Fetch';
 
 import toast from 'react-hot-toast';
 
@@ -22,24 +23,30 @@ export class App extends Component {
     showModal: false,
     largeImgData: { src: '', alt: '' },
     photos: [],
-    page: 0,
+    page: 1,
     perPage: 12,
     status: Status.IDLE,
     showLoadMore: false,
   };
 
+  componentDidUpdate(_, prevState) {
+    const prevName = prevState.photoName;
+    const nextName = this.state.photoName;
+    const prevPage = prevState.page;
+    const nextPage = this.state.page;
+
+    if (prevName !== nextName || prevPage !== nextPage) {
+      this.setState({ status: Status.PENDING });
+      this.fetchPhotos(nextName, this.state.page);
+    }
+  }
+
   fetchPhotos = (nextName, nextPage) => {
-    fetch(
-      `https://pixabay.com/api/?q=${nextName}&page=${nextPage}&key=30662426-21982097d0559eebc608a0eec&image_type=photo&orientation=horizontal&per_page=${this.state.perPage}`
-    )
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-      })
+    const { perPage, page } = this.state;
+    this.setState({ status: Status.PENDING });
+    api
+      .fetchPhotos(nextName, nextPage, perPage)
       .then(photos => {
-        console.log(photos.totalHits);
-        const { perPage, page } = this.state;
         const pages = Math.ceil(photos.totalHits / perPage);
         const showLoadMore = page < pages;
         this.setState({ showLoadMore });
@@ -48,12 +55,22 @@ export class App extends Component {
           toast.error('Sorry,we did not find...');
           this.setState({ status: Status.IDLE });
         } else {
+          const photoApiArr = [];
+          photos.hits.map(item =>
+            photoApiArr.push({
+              id: item.id,
+              webformatURL: item.webformatURL,
+              largeImageURL: item.largeImageURL,
+              tags: item.tags,
+            })
+          );
           this.setState(prevState => ({
-            photos: [...prevState.photos, ...photos.hits],
+            photos: [...prevState.photos, ...photoApiArr],
             status: Status.RESOLVED,
             page: nextPage,
           }));
           this.autoScroll();
+          console.log(photoApiArr);
         }
       })
 
@@ -67,7 +84,7 @@ export class App extends Component {
   };
 
   loadMore = () => {
-    this.fetchPhotos(this.state.photoName, this.state.page + 1);
+    this.setState({ page: this.state.page + 1 });
   };
 
   autoScroll = () => {
@@ -78,8 +95,7 @@ export class App extends Component {
   };
 
   handleFormSubmit = photoName => {
-    this.setState({ photoName, photos: [] });
-    this.fetchPhotos(photoName, 1);
+    this.setState({ photoName, photos: [], page:1, }, );
   };
 
   toggleModal = () => {
@@ -113,7 +129,10 @@ export class App extends Component {
           onImgClick={this.toggleModal}
           shereSrcForModal={this.shereSrcForModal}
         />
-        {showLoadMore && <Button type="button" onClick={this.loadMore} />}
+
+        {status === Status.RESOLVED && showLoadMore && (
+          <Button type="button" onClick={this.loadMore} />
+        )}
       </AppDiv>
     );
   }

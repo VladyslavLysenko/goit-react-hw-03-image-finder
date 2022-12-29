@@ -6,7 +6,7 @@ import { Modal } from '../components/Modal/Modal';
 import { Button } from '../components/Button/Button';
 import { AppDiv } from './App.styled';
 import { GlobalStyle } from 'GlobalStyle';
-import api from 'components/Fetch/Fetch';
+import api from '../Fetch/Fetch';
 
 import toast from 'react-hot-toast';
 

@@ -11,6 +11,8 @@ export default function ImageGallery({
   onImgClick,
   shereSrcForModal,
 }) {
+
+
   if (status === 'idle') {
     return (
       <div>
@@ -30,8 +32,11 @@ export default function ImageGallery({
   }
 
   if (status === 'resolved') {
+    console.log(photos);
+ 
     return (
       <div>
+       
         <ImageGalleryUl className="gallery">
           {photos.map(photo => (
             <ImageGalleryItem

@@ -84,7 +84,7 @@ export class App extends Component {
   };
 
   loadMore = () => {
-    this.setState({ page: this.state.page + 1 });
+    this.setState(prevState => ({ page: prevState.page + 1 }))
   };
 
   autoScroll = () => {

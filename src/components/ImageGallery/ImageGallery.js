@@ -29,14 +29,9 @@ export default function ImageGallery({
         <p>Зображення не знайдено...</p>
       </div>
     );
-  }
-
-  if (status === 'resolved') {
-    console.log(photos);
- 
+  } else {
     return (
       <div>
-       
         <ImageGalleryUl className="gallery">
           {photos.map(photo => (
             <ImageGalleryItem
@@ -50,7 +45,11 @@ export default function ImageGallery({
       </div>
     );
   }
-}
+
+  }
+
+ 
+
 
 ImageGallery.propTypes = {
   photos: PropTypes.array.isRequired,

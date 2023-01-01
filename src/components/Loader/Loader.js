@@ -6,7 +6,7 @@ export const Loader = () => (
     width="90"
     ariaLabel="blocks-loading"
     wrapperStyle={{
-      marginTop: '50px',
+      marginTop: '5px',
       marginLeft: '50%',
       transform: 'translate(-50%)',
     }}

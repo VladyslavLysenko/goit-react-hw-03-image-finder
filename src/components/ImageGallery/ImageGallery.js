@@ -18,9 +18,7 @@ export default function ImageGallery({
       </div>
     );
   }
-  if (status === 'pending') {
-    return <Loader />;
-  }
+
   if (status === 'rejected') {
     return (
       <div>
@@ -29,23 +27,21 @@ export default function ImageGallery({
     );
   }
 
-  if (photos.length > 0) {
-    return (
-      <div>
-        <ImageGalleryUl className="gallery">
-          {photos.map(photo => (
-            <ImageGalleryItem
-              photo={photo}
-              key={photo.id}
-              onImgClick={onImgClick}
-              shereSrcForModal={shereSrcForModal}
-            />
-          ))}
-        </ImageGalleryUl>
-      </div>
-    );
-  }
-
+  return (
+    <div>
+      <ImageGalleryUl className="gallery">
+        {photos.map(photo => (
+          <ImageGalleryItem
+            photo={photo}
+            key={photo.id}
+            onImgClick={onImgClick}
+            shereSrcForModal={shereSrcForModal}
+          />
+        ))}
+      </ImageGalleryUl>
+      {status === 'pending' && <Loader />}
+    </div>
+  );
 }
 
 ImageGallery.propTypes = {

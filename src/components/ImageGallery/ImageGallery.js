@@ -11,8 +11,6 @@ export default function ImageGallery({
   onImgClick,
   shereSrcForModal,
 }) {
-
-
   if (status === 'idle') {
     return (
       <div>
@@ -21,7 +19,7 @@ export default function ImageGallery({
     );
   }
   if (status === 'pending') {
-    return <Loader/>;
+    return <Loader />;
   }
   if (status === 'rejected') {
     return (
@@ -29,7 +27,9 @@ export default function ImageGallery({
         <p>Зображення не знайдено...</p>
       </div>
     );
-  } else {
+  }
+
+  if (photos.length > 0) {
     return (
       <div>
         <ImageGalleryUl className="gallery">
@@ -46,10 +46,7 @@ export default function ImageGallery({
     );
   }
 
-  }
-
- 
-
+}
 
 ImageGallery.propTypes = {
   photos: PropTypes.array.isRequired,
